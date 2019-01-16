@@ -1,22 +1,27 @@
 import React from "react";
 import "./Youtube.css";
+import { Button } from "react-bootstrap";
 
 const ApiKey = "AIzaSyARCbccCAeSsQWNb0DgBWnObEYanJPbBio";
 const result = 10;
-
-var finalURL = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=${result}&q=surfing&key=${ApiKey}`;
+//var search = "";
 
 class Youtube extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      resultyt: []
+      resultyt: [],
+      search: ""
     };
     this.clicked = this.clicked.bind(this);
+    this.getSearch = this.getSearch.bind(this);
   }
 
-  clicked() {
+  clicked(e) {
+    let finalURL = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=${result}&q=${
+      this.state.search
+    }&key=${ApiKey}`;
     fetch(finalURL)
       .then(response => response.json())
       .then(responseJson => {
@@ -30,14 +35,29 @@ class Youtube extends React.Component {
         console.error(error);
       });
   }
+  getSearch(e) {
+    this.setState({ search: e.target.value });
+    //console.log(this.state.search);
+    e.preventDefault();
+  }
   //https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=UCVk7uRN7g-q_uHMaAjHxk8A&maxResults=25&q=surfing&key=AIzaSyARCbccCAeSsQWNb0DgBWnObEYanJPbBio
   //https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&q=surfing&key=AIzaSyARCbccCAeSsQWNb0DgBWnObEYanJPbBio
   //apikey AIzaSyARCbccCAeSsQWNb0DgBWnObEYanJPbBio
+
   render() {
     console.log(this.state.resultyt);
     return (
-      <div>
-        <button onClick={this.clicked}>get video</button>
+      <div className="container">
+        <input
+          onChange={this.getSearch}
+          className="d-flex justify-content-center"
+        />
+        <Button
+          onClick={this.clicked}
+          className="d-flex justify-content-center"
+        >
+          get video
+        </Button>
         {this.state.resultyt.map((link, i) => {
           console.log(link);
           var frame = (
